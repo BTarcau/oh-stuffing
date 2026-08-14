@@ -1,8 +1,10 @@
 # 🦃 Oh Stuffing! — the friendly scorekeeper
 
-A playful, phone-friendly scoreboard for the trick-taking card game **Oh Stuffing** (a.k.a. *Oh Hell / Oh Pshaw*). No accounts, no server — everything runs in your browser and saves automatically as you play.
+A playful, phone-friendly scoreboard for the trick-taking card game **Oh Stuffing** (a.k.a. *Oh Hell / Oh Pshaw / Nomination Whist*). No accounts, no server — everything runs in your browser and saves automatically as you play. Light and dark themes included.
 
 👉 **Live app:** https://btarcau.github.io/oh-stuffing/
+
+![Oh Stuffing! — the friendly scorekeeper](og-image.png)
 
 ## How scoring works
 
@@ -44,3 +46,7 @@ python3 -m http.server 8000
 ## Tech
 
 Vanilla HTML/CSS/JavaScript, no build step, no dependencies. State persists in `localStorage`.
+
+---
+
+<sub>Also known as: **Oh Hell**, **Oh Pshaw**, **Oh Well**, **Nomination Whist**, **Blackout**, **Bust**, **Wizard**-style bidding. A free online score sheet / score tracker / scoreboard app for this trick-taking bidding card game.</sub>
