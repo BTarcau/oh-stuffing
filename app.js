@@ -413,20 +413,16 @@
     const ranks = rankMap(rows);
     const ordered = rows.slice().sort((a, b) => b.total - a.total);
 
-    // leaderboard cards
-    const lb = ordered.map((row, i) => {
+    // compact leaderboard chips (wrap into 1–2 rows; details live in the table below)
+    const lb = ordered.map((row) => {
       const idx = S.players.findIndex((p) => p.id === row.id);
       const rk = ranks[row.id];
-      const st = playerStats(row.id);
+      const badge = rk === 1 ? "🥇" : rk === 2 ? "🥈" : rk === 3 ? "🥉" : rk;
       return `
         <div class="lb-row r${rk <= 3 ? rk : 0}">
-          ${rk === 1 ? '<span class="crown">👑</span>' : ""}
-          <span class="rank-badge">${rk === 1 ? "🥇" : rk === 2 ? "🥈" : rk === 3 ? "🥉" : rk}</span>
-          <span class="lb-name">
-            <span class="nm"><span class="suit ${isRed(idx) ? "red" : ""}">${suitFor(idx)}</span>${esc(row.name)}</span>
-            <span class="meta">${st.hits} hits • ${st.misses} misses</span>
-          </span>
-          <span class="lb-pts">${row.total}<span class="u">pts</span></span>
+          <span class="rank-badge">${badge}</span>
+          <span class="lb-nm"><span class="suit ${isRed(idx) ? "red" : ""}">${suitFor(idx)}</span><span class="nm">${esc(row.name)}</span></span>
+          <span class="lb-pts">${row.total}</span>
         </div>`;
     }).join("");
 
