@@ -101,6 +101,24 @@
     S = freshSetup(); save(); setTab("entry"); render();
   });
 
+  // ---------- light / dark theme ----------
+  const THEME_KEY = "oh-stuffing-theme";
+  function applyTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    const b = el("btn-theme");
+    if (b) b.textContent = t === "light" ? "🌙" : "☀️"; // show the theme you'll switch to
+  }
+  let theme = localStorage.getItem(THEME_KEY);
+  if (theme !== "light" && theme !== "dark") {
+    theme = (window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+  }
+  applyTheme(theme);
+  el("btn-theme").addEventListener("click", () => {
+    theme = theme === "light" ? "dark" : "light";
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+    applyTheme(theme);
+  });
+
   // =========================================================================
   //  RENDER
   // =========================================================================
@@ -265,8 +283,10 @@
       const dealerForbids = isDealer && bidsBlocked;
       return `
         <div class="prow ${isDealer ? "is-dealer" : ""}" data-id="${p.id}">
-          <div class="prow-name"><span class="suit ${isRed(i) ? "red" : ""}">${suitFor(i)}</span>
-            <span class="nm-wrap"><span class="nm">${esc(p.name)}</span>${isDealer ? '<span class="dealer-mini">🃏 dealer</span>' : ""}</span></div>
+          <div class="prow-name">
+            <span class="name-line"><span class="suit ${isRed(i) ? "red" : ""}">${suitFor(i)}</span><span class="nm">${esc(p.name)}</span></span>
+            ${isDealer ? '<span class="dealer-chip">DEALER</span>' : ""}
+          </div>
           <div class="stepper ${dealerForbids ? "forbidden" : ""}" data-kind="bid" data-id="${p.id}">
             <button data-step="-1" ${bid <= 0 ? "disabled" : ""}>−</button>
             <span class="sval">${bid}</span>
