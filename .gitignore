@@ -1,0 +1,5 @@
+# Editor / OS cruft
+.DS_Store
+
+# Local dev-server config used by the in-app preview (not needed to run the site)
+.claude/

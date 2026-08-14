@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a0b2e" />
+  <title>Oh Stuffing! 🦃 — Scorekeeper</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-tab="entry">
+  <div class="bg-orbs" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">🦃</span>
+      <div class="brand-text">
+        <span class="brand-name">Oh&nbsp;Stuffing!</span>
+        <span class="brand-tag">the friendly scorekeeper</span>
+      </div>
+    </div>
+    <button id="btn-newgame" class="ghost-btn" title="Start over">↺ New game</button>
+  </header>
+
+  <!-- Mobile tab switcher (hidden on wide screens) -->
+  <nav class="tabbar" role="tablist">
+    <button class="tab" data-tab-target="entry" role="tab">✏️ <span>Entry</span></button>
+    <button class="tab" data-tab-target="board" role="tab">🏆 <span>Scoreboard</span></button>
+  </nav>
+
+  <main class="layout">
+    <section id="panel-entry" class="panel panel-entry" aria-label="Entry"></section>
+    <section id="panel-board" class="panel panel-board" aria-label="Scoreboard"></section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
