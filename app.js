@@ -119,6 +119,11 @@
     applyTheme(theme);
   });
 
+  // Block iOS Safari pinch-zoom (the viewport meta only applies in the
+  // installed home-screen app; touch-action handles double-tap zoom).
+  ["gesturestart", "gesturechange", "gestureend"].forEach((ev) =>
+    document.addEventListener(ev, (e) => e.preventDefault(), { passive: false }));
+
   // =========================================================================
   //  RENDER
   // =========================================================================

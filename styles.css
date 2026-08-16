@@ -81,6 +81,8 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
+/* allow normal scrolling but block pinch-zoom and double-tap-to-zoom */
+html{touch-action:pan-x pan-y;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{
   font-family:"Nunito", system-ui, -apple-system, sans-serif;
   color:var(--ink);
@@ -88,6 +90,7 @@ body{
   background-attachment:fixed;
   min-height:100dvh;
   -webkit-font-smoothing:antialiased;
+  padding-top:env(safe-area-inset-top);
   padding-bottom:env(safe-area-inset-bottom);
 }
 .bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
