@@ -96,9 +96,9 @@
   document.querySelectorAll(".tab").forEach((b) =>
     b.addEventListener("click", () => setTab(b.dataset.tabTarget)));
 
-  el("btn-newgame").addEventListener("click", () => {
-    if (S.phase !== "setup" && !confirm("Start a brand new game? Current scores will be cleared.")) return;
-    S = freshSetup(); save(); setTab("entry"); render();
+  holdToConfirm(el("btn-newgame"), {
+    onComplete: () => { S = freshSetup(); save(); setTab("entry"); render(); toast("Fresh game — deal 'em! 🃏"); },
+    onTap: () => toast("Hold New game for 3 seconds to start over ↺"),
   });
 
   // ---------- light / dark theme ----------
@@ -327,7 +327,7 @@
       <div class="warn-line">${warn}</div>
       <div class="btn-row">
         ${r > 0 ? '<button class="sub-btn" id="prev-round">← Back</button>' : ""}
-        <button class="sub-btn reset" id="reset-round" title="Zero this round's bids & tricks to re-deal">↺ Reset</button>
+        <button class="sub-btn reset" id="reset-round" title="Hold 3 seconds to clear this round">↺ Reset</button>
         <button class="primary-btn ${isLast ? "end" : ""}" id="next-round" ${nextOk ? "" : "disabled"} style="margin-top:0">
           ${isLast ? "🏁 End game" : "Next round →"}
         </button>
@@ -340,13 +340,62 @@
         btn.addEventListener("click", () => step(r, kind, id, +btn.dataset.step, cards)));
     });
     if (r > 0) el("prev-round").addEventListener("click", () => { S.current--; save(); render(); });
-    el("reset-round").addEventListener("click", () => {
-      if (!confirm(`Reset round ${r + 1}? This clears every player's bid and tricks for this round so you can re-deal.`)) return;
-      const d = ensureRound(r);
-      S.players.forEach((p) => { d.bids[p.id] = 0; d.made[p.id] = 0; });
-      save(); renderPlay(); renderBoard(); toast("Round cleared — re-deal and enter again 🔁");
+    holdToConfirm(el("reset-round"), {
+      onComplete: () => {
+        const d = ensureRound(r);
+        S.players.forEach((p) => { d.bids[p.id] = 0; d.made[p.id] = 0; });
+        save(); renderPlay(); renderBoard(); toast("Round cleared — re-deal and enter again 🔁");
+      },
+      onTap: () => toast("Hold Reset for 3 seconds to clear this round ↺"),
     });
     el("next-round").addEventListener("click", () => advance(isLast));
+  }
+
+  // Press-and-hold to confirm: sweeps a fill over `ms`; fires onComplete only
+  // if held the whole time. A quick tap fires onTap (used to teach the gesture).
+  function holdToConfirm(btn, opts) {
+    const ms = opts.ms || 3000;
+    if (!btn.querySelector(".hold-label")) {
+      const label = document.createElement("span");
+      label.className = "hold-label";
+      while (btn.firstChild) label.appendChild(btn.firstChild);
+      const fill = document.createElement("span");
+      fill.className = "hold-fill";
+      btn.classList.add("holdable");
+      btn.appendChild(fill);
+      btn.appendChild(label);
+    }
+    const fill = btn.querySelector(".hold-fill");
+    let timer = null, startT = 0, done = false;
+    const clear = () => {
+      if (timer) { clearTimeout(timer); timer = null; }
+      fill.style.transition = "transform 160ms ease";
+      fill.style.transform = "scaleX(0)";
+      btn.classList.remove("holding");
+    };
+    const start = (e) => {
+      if (btn.disabled) return;
+      e.preventDefault();
+      done = false; startT = Date.now();
+      try { btn.setPointerCapture(e.pointerId); } catch (_) {}
+      btn.classList.add("holding");
+      fill.style.transition = "none";
+      fill.style.transform = "scaleX(0)";
+      void fill.offsetWidth;                 // reflow so the next transition animates
+      fill.style.transition = `transform ${ms}ms linear`;
+      fill.style.transform = "scaleX(1)";
+      timer = setTimeout(() => { done = true; clear(); opts.onComplete(); }, ms);
+    };
+    const end = () => {
+      if (done) { done = false; return; }
+      const held = startT ? Date.now() - startT : 999;
+      clear();
+      if (held < 450 && opts.onTap) opts.onTap();
+      startT = 0;
+    };
+    btn.addEventListener("pointerdown", start);
+    btn.addEventListener("pointerup", end);
+    btn.addEventListener("pointercancel", end);
   }
 
   function step(r, kind, id, delta, cards) {
