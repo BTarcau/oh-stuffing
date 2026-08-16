@@ -237,10 +237,12 @@ h1,h2,h3{font-family:"Fredoka", "Nunito", sans-serif;margin:0}
 .btn-row{display:flex;gap:10px;margin-top:14px}
 .btn-row .primary-btn{margin-top:0}
 .sub-btn{
-  padding:16px 20px;border-radius:16px;font-weight:800;font-size:16px;
+  padding:16px 16px;border-radius:16px;font-weight:800;font-size:15px;white-space:nowrap;
   background:var(--fill);border:1px solid var(--stroke);color:var(--ink-dim);transition:.15s;flex:none
 }
 .sub-btn:hover:not(:disabled){background:var(--fill-hover);color:var(--ink)}
+.sub-btn.reset{color:var(--bad);border-color:rgba(251,113,133,.4)}
+.sub-btn.reset:hover:not(:disabled){background:rgba(251,113,133,.14);color:var(--bad)}
 
 /* ---------------- Reorder list ---------------- */
 .order-list{display:flex;flex-direction:column;gap:10px;margin-bottom:6px}

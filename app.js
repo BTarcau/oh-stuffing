@@ -327,6 +327,7 @@
       <div class="warn-line">${warn}</div>
       <div class="btn-row">
         ${r > 0 ? '<button class="sub-btn" id="prev-round">← Back</button>' : ""}
+        <button class="sub-btn reset" id="reset-round" title="Zero this round's bids & tricks to re-deal">↺ Reset</button>
         <button class="primary-btn ${isLast ? "end" : ""}" id="next-round" ${nextOk ? "" : "disabled"} style="margin-top:0">
           ${isLast ? "🏁 End game" : "Next round →"}
         </button>
@@ -339,6 +340,12 @@
         btn.addEventListener("click", () => step(r, kind, id, +btn.dataset.step, cards)));
     });
     if (r > 0) el("prev-round").addEventListener("click", () => { S.current--; save(); render(); });
+    el("reset-round").addEventListener("click", () => {
+      if (!confirm(`Reset round ${r + 1}? This clears every player's bid and tricks for this round so you can re-deal.`)) return;
+      const d = ensureRound(r);
+      S.players.forEach((p) => { d.bids[p.id] = 0; d.made[p.id] = 0; });
+      save(); renderPlay(); renderBoard(); toast("Round cleared — re-deal and enter again 🔁");
+    });
     el("next-round").addEventListener("click", () => advance(isLast));
   }
 
